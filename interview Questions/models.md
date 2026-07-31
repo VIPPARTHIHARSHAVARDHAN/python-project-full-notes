@@ -1,525 +1,236 @@
-# 📌 01. Understanding `database.py` in FastAPI
+# 🎯 Interview Questions
 
-## 🎯 Project Setup
+### Q1. What is `models.py` in FastAPI?
 
-Created the following project structure:
+**Answer:**
 
-```text
-Project/
-│
-├── FastAPI/
-│   ├── database.py
-│   ├── main.py
-│   └── models.py
-│
-└── React/
-```
+`models.py` contains SQLAlchemy ORM models. Each Python class represents a database table, and each class attribute mapped with `Column()` represents a column in that table.
 
 ---
 
-## 📂 Code Added (`database.py`)
+### Q2. Why do we create models in FastAPI?
 
-```python
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy.ext.declarative import declarative_base
+**Answer:**
 
-URL_DATABASE = "sqlite:///./finance.db"
-
-engine = create_engine(
-    URL_DATABASE,
-    connect_args={"check_same_thread": False}
-)
-
-SessionLocal = sessionmaker(
-    autocommit=False,
-    autoflush=False,
-    bind=engine
-)
-
-Base = declarative_base()
-```
+Models define the database structure using Python classes. SQLAlchemy uses these models to create and manage database tables without writing SQL manually.
 
 ---
 
-# 🎯 Purpose
+### Q3. Why does `Transaction` inherit from `Base`?
 
-`database.py` is responsible for connecting the FastAPI application with the database.
+**Answer:**
 
-It creates everything required to communicate with the database.
-
-- Database Connection (Engine)
-- Database Session
-- Base Class for Models
-
-Without this file, FastAPI cannot perform any database operations.
-
----
-
-# 🔄 Overall Workflow
-
-```text
-FastAPI Application
-        │
-        ▼
-database.py
-        │
-        ├── Engine (Database Connection)
-        ├── Session (Database Operations)
-        └── Base (Parent Class for Models)
-        │
-        ▼
-SQLite Database
-```
-
-Whenever FastAPI wants to **Create**, **Read**, **Update**, or **Delete** data, it first goes through `database.py`.
-
----
-
-# 📝 Line by Line Explanation
-
-## Line 1
-
-```python
-from sqlalchemy import create_engine
-```
-
-### Purpose
-
-Imports the `create_engine()` function.
-
-### What is Engine?
-
-Engine is the **database connection object**.
-
-Think of it as a bridge between Python and the database.
-
-```text
-Python
-   │
-   ▼
-Engine
-   │
-   ▼
-SQLite Database
-```
-
-Without an Engine, Python cannot communicate with the database.
-
----
-
-## Line 2
-
-```python
-from sqlalchemy.orm import sessionmaker
-```
-
-### Purpose
-
-Imports `sessionmaker`, which is used to create database sessions.
-
-### What is a Session?
-
-A Session represents one interaction with the database.
+By inheriting from `Base`, SQLAlchemy recognizes the class as an ORM model and maps it to a database table.
 
 Example:
 
-```text
-Open Session
-      │
-      ▼
-Insert Data
-
-Update Data
-
-Delete Data
-
-Read Data
-      │
-      ▼
-Close Session
+```python
+class Transaction(Base):
 ```
 
-Every database operation is performed through a Session.
+Without `Base`, Python treats it as a normal class and SQLAlchemy will not create a table for it.
 
 ---
 
-## Line 3
+### Q4. What is `__tablename__`?
 
-```python
-from sqlalchemy.ext.declarative import declarative_base
-```
+**Answer:**
 
-### Purpose
-
-Imports `declarative_base()`.
-
-It creates a parent class that all database models inherit from.
+`__tablename__` specifies the name of the table that will be created in the database.
 
 Example:
 
-Without Base
-
 ```python
-class User:
+__tablename__ = "transactions"
 ```
 
-Python treats it as a normal class.
-
-With Base
-
-```python
-class User(Base):
-```
-
-Now SQLAlchemy understands that `User` represents a database table.
+This creates a table named `transactions`.
 
 ---
 
-# Database URL
+### Q5. What is `Column()`?
+
+**Answer:**
+
+`Column()` defines a database column along with its datatype and optional constraints like `primary_key`, `index`, `nullable`, etc.
+
+Example:
 
 ```python
-URL_DATABASE = "sqlite:///./finance.db"
-```
-
-### Purpose
-
-Specifies which database SQLAlchemy should connect to.
-
-```text
-sqlite:///
-      │
-      ▼
-Use SQLite Database
-
-finance.db
-      │
-      ▼
-Database File Name
-```
-
-When the application runs, `finance.db` is created automatically if it doesn't already exist.
-
----
-
-# Creating the Engine
-
-```python
-engine = create_engine(
-    URL_DATABASE,
-    connect_args={"check_same_thread": False}
-)
-```
-
-### Purpose
-
-Creates the connection between FastAPI and SQLite.
-
-Workflow
-
-```text
-FastAPI
-    │
-    ▼
-Engine
-    │
-    ▼
-SQLite Database
-```
-
-### Why `check_same_thread=False`?
-
-SQLite allows only one thread by default.
-
-FastAPI can handle multiple requests simultaneously.
-
-```text
-User 1
-User 2
-User 3
-    │
-    ▼
-FastAPI
-```
-
-`check_same_thread=False` allows SQLite to work correctly with FastAPI's request handling.
-
-> **Note:** This option is specific to SQLite and is generally not required when using PostgreSQL or MySQL.
-
----
-
-# Creating the Session Factory
-
-```python
-SessionLocal = sessionmaker(
-    autocommit=False,
-    autoflush=False,
-    bind=engine
-)
-```
-
-### Purpose
-
-Creates a Session Factory.
-
-Whenever FastAPI needs to interact with the database, it creates a new Session using:
-
-```python
-SessionLocal()
-```
-
-Workflow
-
-```text
-Session Factory
-      │
-      ├── Session 1
-      ├── Session 2
-      └── Session 3
+amount = Column(Float)
 ```
 
 ---
 
-### `autocommit=False`
+### Q6. Why do we use different column types like Integer, String, Float, and Boolean?
 
-Changes are **not saved automatically**.
+**Answer:**
 
-Example
+Each datatype stores a specific type of data.
 
-```text
-Insert Employee
-      │
-      ▼
-Update Salary
-      │
-      ▼
-Delete Record
-      │
-      ▼
-Commit
-```
+| Type | Purpose |
+|------|---------|
+| Integer | Whole numbers |
+| Float | Decimal numbers |
+| String | Text values |
+| Boolean | True or False |
 
-If everything succeeds, the changes are committed.
-
-This helps maintain data consistency.
+Choosing the correct datatype improves data integrity and storage efficiency.
 
 ---
 
-### `autoflush=False`
+### Q7. What is `primary_key=True`?
 
-Flush means sending pending changes to the database before committing.
+**Answer:**
 
-With `autoflush=False`, SQLAlchemy waits until the application explicitly decides when to send those changes.
+It marks a column as the Primary Key.
 
----
+A Primary Key uniquely identifies every row in a table.
 
-### `bind=engine`
-
-```text
-Session
-   │
-   ▼
-Engine
-   │
-   ▼
-SQLite Database
-```
-
-It tells every Session which database connection (Engine) to use.
-
----
-
-# Creating Base
+Example:
 
 ```python
-Base = declarative_base()
+id = Column(Integer, primary_key=True)
 ```
 
-### Purpose
-
-Creates the parent class for all database models.
-
-Example
-
-```python
-class User(Base):
-
-class Employee(Base):
-
-class Pipeline(Base):
-```
-
-Every model that inherits from `Base` becomes a database table.
+No two rows can have the same primary key value.
 
 ---
 
-# 🌍 Real World Example
+### Q8. Why do we use `index=True`?
 
-Suppose you're building an **Employee Management System**.
+**Answer:**
 
-Instead of manually writing SQL like:
+`index=True` creates a database index on the column.
+
+Indexes improve the speed of searching, filtering, and querying records.
+
+Example:
+
+```python
+id = Column(Integer, primary_key=True, index=True)
+```
+
+---
+
+### Q9. What is ORM?
+
+**Answer:**
+
+ORM stands for **Object Relational Mapping**.
+
+It allows developers to interact with the database using Python classes instead of writing SQL queries manually.
+
+Example:
+
+Instead of writing
 
 ```sql
-CREATE TABLE employees(
+SELECT * FROM transactions;
+```
+
+you can write
+
+```python
+db.query(Transaction).all()
+```
+
+SQLAlchemy converts it into SQL automatically.
+
+---
+
+### Q10. How does SQLAlchemy convert a Python class into a database table?
+
+**Answer:**
+
+When a model inherits from `Base`, SQLAlchemy reads the class definition and generates the corresponding SQL `CREATE TABLE` statement automatically.
+
+Example:
+
+```python
+class Transaction(Base):
+    __tablename__ = "transactions"
+```
+
+becomes
+
+```sql
+CREATE TABLE transactions(
     id INTEGER PRIMARY KEY,
-    name TEXT,
-    salary FLOAT
+    amount FLOAT,
+    category TEXT,
+    description TEXT,
+    is_income BOOLEAN,
+    date TEXT
 );
 ```
 
-You'll create a Python class:
-
-```python
-class Employee(Base):
-    __tablename__ = "employees"
-```
-
-SQLAlchemy automatically creates the table in the database.
-
 ---
 
-# ⚙️ Internal Working
-
-```text
-FastAPI Starts
-      │
-      ▼
-database.py Executes
-      │
-      ├── Create Engine
-      ├── Create Session Factory
-      └── Create Base Class
-      │
-      ▼
-Models inherit Base
-      │
-      ▼
-FastAPI creates Sessions
-      │
-      ▼
-Database Operations
-      │
-      ▼
-SQLite Database
-```
-
----
-
-# 📌 Key Concepts
-
-| Object | Purpose |
-|---------|---------|
-| `create_engine()` | Creates the database connection |
-| `engine` | Stores the database connection |
-| `sessionmaker()` | Creates database sessions |
-| `SessionLocal()` | Creates a new session whenever needed |
-| `declarative_base()` | Creates the parent class for all models |
-| `Base` | Parent class inherited by every database model |
-
----
-
-# 👨‍💻 Developer Notes
-
-✔ Every FastAPI project using SQLAlchemy has a `database.py`.
-
-✔ Only one Engine is usually created for the application.
-
-✔ Every request gets its own Session.
-
-✔ Every database model must inherit from `Base`.
-
-✔ SQLite requires `check_same_thread=False`; PostgreSQL and MySQL generally do not.
-
----
-
-# ❌ Common Mistakes
-
-❌ Forgetting to inherit models from `Base`.
-
-❌ Forgetting to bind the Session with the Engine.
-
-❌ Creating multiple Engines unnecessarily.
-
-❌ Not closing database sessions after use.
-
----
-
-# 🎯 Interview Questions
-
-### Q1. What is the purpose of `database.py`?
+### Q11. What happens if we don't define `__tablename__`?
 
 **Answer:**
 
-`database.py` centralizes the database configuration. It creates the Engine (database connection), Session Factory, and Base class required by SQLAlchemy ORM.
+SQLAlchemy may generate a table name automatically based on the class name, but defining `__tablename__` explicitly is considered a best practice because it gives you control over the table name.
 
 ---
 
-### Q2. What is an Engine?
+### Q12. Can one model represent multiple tables?
 
 **Answer:**
 
-An Engine is the connection object that allows Python to communicate with the database.
+No.
+
+Each SQLAlchemy model represents one database table.
+
+If you have three tables, you typically create three separate model classes.
 
 ---
 
-### Q3. What is a Session?
+### Q13. What is the difference between a Python class and a SQLAlchemy model?
 
 **Answer:**
 
-A Session is used to perform CRUD (Create, Read, Update, Delete) operations on the database.
+A normal Python class is only used inside the application.
+
+A SQLAlchemy model inherits from `Base`, allowing SQLAlchemy to map it to a database table.
 
 ---
 
-### Q4. Why do we use `declarative_base()`?
+### Q14. Why do we use models instead of writing SQL directly?
 
 **Answer:**
 
-It creates a parent class that all SQLAlchemy models inherit from so SQLAlchemy recognizes them as database tables.
+Using models provides several advantages:
+
+- Less SQL code
+- Better readability
+- Easier maintenance
+- Database independence
+- Automatic table creation
+- Easy CRUD operations using Python
 
 ---
 
-### Q5. Why is `autocommit=False` used?
+### Q15. What is the relationship between `database.py` and `models.py`?
 
 **Answer:**
 
-It prevents automatic saving of changes. The application explicitly commits changes only after all operations complete successfully.
+`database.py` creates the Engine, Session, and Base.
 
----
+`models.py` imports the `Base` class and uses it to create database tables.
 
-### Q6. Why do we use `check_same_thread=False`?
-
-**Answer:**
-
-SQLite allows only one thread by default. FastAPI can process multiple requests, so this option allows SQLite to work correctly with FastAPI. It is generally not needed with PostgreSQL or MySQL.
-
----
-
-# 📖 Summary
+Workflow:
 
 ```text
 database.py
-
       │
       ▼
-Creates Engine
-
+Creates Base
       │
       ▼
-Creates Session Factory
-
+models.py
       │
       ▼
-Creates Base Class
-
-      │
-      ▼
-Models inherit Base
-
-      │
-      ▼
-FastAPI performs CRUD Operations
-
-      │
-      ▼
-SQLite Database
+Creates Database Tables
 ```
