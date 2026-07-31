@@ -21,297 +21,231 @@ added code in database.py
 
               Base = declarative_base()
 
-Let's understand it line by line.
+📌 Understanding database.py in FastAPI
+Purpose
 
-What is database.py?
+database.py is responsible for connecting the FastAPI application with the database.
 
-Think of it as the bridge between FastAPI and the database.
+It creates everything required to communicate with the database:
 
-FastAPI
+Database Connection (Engine)
+Database Session
+Base Class for Models
 
-↓
+Without this file, FastAPI cannot perform any database operations.
 
+Overall Workflow
+FastAPI Application
+        │
+        ▼
 database.py
-
-↓
-
+        │
+        ├── Engine (Database Connection)
+        ├── Session (Database Operations)
+        └── Base (Parent Class for Models)
+        │
+        ▼
 SQLite Database
 
-Whenever FastAPI wants to store or retrieve data, it goes through this file.
+Whenever FastAPI wants to Create, Read, Update, or Delete data, it first goes through database.py.
 
-Line 1
+Complete Code
 from sqlalchemy import create_engine
-What is create_engine()?
-
-Engine means connection to the database.
-
-Example:
-
-Suppose you want to talk to MySQL.
-
-First you need a connection.
-
-Similarly,
-
-create_engine()
-
-creates a connection object.
-
-Think of it like:
-
-Python
-   │
-create_engine()
-   │
-SQLite Database
-Line 2
 from sqlalchemy.orm import sessionmaker
-
-What is a Session?
-
-Imagine a bank.
-
-Before you deposit or withdraw money,
-
-you open a session.
-
-Open Session
-
-↓
-
-Do Work
-
-↓
-
-Close Session
-
-Database also works like that.
-
-Session is used to
-
-Insert data
-Update data
-Delete data
-Read data
-
-without directly talking to SQLite every time.
-
-Line 3
 from sqlalchemy.ext.declarative import declarative_base
 
-This is one of the most important concepts.
-
-Suppose you create
-
-class User:
-
-Python thinks it is a normal class.
-
-But we want SQLAlchemy to understand
-
-This class represents a database table.
-
-That's why we use
-
-Base = declarative_base()
-
-Now every model becomes
-
-class User(Base):
-
-instead of
-
-class User:
-
-Now SQLAlchemy knows
-
-"User" is a database table.
-
-Line 5
 URL_DATABASE = "sqlite:///./finance.db"
 
-This tells SQLAlchemy
-
-Which database should I connect to?
-
-Here
-
-sqlite:///
-
-means
-
-Use SQLite.
-
-finance.db
-
-means
-
-Database file name.
-
-After running,
-
-this file gets created.
-
-finance.db
-
-Think of it like
-
-MySQL
-
-↓
-
-database name
-
-↓
-
-employees
-
-Here
-
-SQLite
-
-↓
-
-finance.db
-Line 7
 engine = create_engine(
     URL_DATABASE,
     connect_args={"check_same_thread": False}
 )
 
-This actually creates the connection.
-
-Imagine
-
-Python
-
-↓
-
-Engine
-
-↓
-
-SQLite
-
-Now Python can communicate with SQLite.
-
-What is
-check_same_thread=False
-
-SQLite normally allows only one thread.
-
-FastAPI handles multiple requests.
-
-User1
-
-↓
-
-User2
-
-↓
-
-User3
-
-To avoid errors,
-
-SQLite needs
-
-check_same_thread=False
-
-For PostgreSQL later,
-
-this line won't be needed.
-
-Line 9
 SessionLocal = sessionmaker(
     autocommit=False,
     autoflush=False,
     bind=engine
 )
 
-This creates a Session Factory.
+Base = declarative_base()
+Line 1
+from sqlalchemy import create_engine
+Purpose
 
-Think like this.
+Imports the create_engine() function.
 
-Session Factory
+What is Engine?
 
-↓
+Engine is the database connection object.
 
-Session 1
+Think of it as a bridge between Python and the database.
 
-↓
+Python
+   │
+   ▼
+Engine
+   │
+   ▼
+SQLite Database
 
-Session 2
+Without an Engine, Python cannot communicate with the database.
 
-↓
+Line 2
+from sqlalchemy.orm import sessionmaker
+Purpose
 
-Session 3
+Imports sessionmaker, which is used to create database sessions.
 
-Whenever FastAPI needs the database,
+What is a Session?
 
-it asks
+A Session represents one interaction with the database.
+
+Example:
+
+Open Session
+      │
+      ▼
+Insert Data
+
+Update Data
+
+Delete Data
+
+Read Data
+      │
+      ▼
+Close Session
+
+Every database operation is performed through a Session.
+
+Line 3
+from sqlalchemy.ext.declarative import declarative_base
+Purpose
+
+Imports declarative_base().
+
+It creates a parent class that all database models inherit from.
+
+Example:
+
+Without Base
+
+class User:
+
+Python treats it as a normal class.
+
+With Base
+
+class User(Base):
+
+Now SQLAlchemy understands that User represents a database table.
+
+Database URL
+URL_DATABASE = "sqlite:///./finance.db"
+Purpose
+
+Specifies which database SQLAlchemy should connect to.
+
+sqlite:///
+        │
+        ▼
+Use SQLite Database
+
+finance.db
+        │
+        ▼
+Database File Name
+
+When the application runs, finance.db is created automatically if it doesn't already exist.
+
+Creating the Engine
+engine = create_engine(
+    URL_DATABASE,
+    connect_args={"check_same_thread": False}
+)
+Purpose
+
+Creates the connection between FastAPI and SQLite.
+
+Workflow
+
+FastAPI
+    │
+    ▼
+Engine
+    │
+    ▼
+SQLite Database
+Why check_same_thread=False?
+
+SQLite allows only one thread by default.
+
+FastAPI can handle multiple requests simultaneously.
+
+User 1
+User 2
+User 3
+      │
+      ▼
+FastAPI
+
+check_same_thread=False allows SQLite to work correctly with FastAPI's request handling.
+
+Note: This option is specific to SQLite and is generally not required when using databases like PostgreSQL or MySQL.
+
+Creating the Session Factory
+SessionLocal = sessionmaker(
+    autocommit=False,
+    autoflush=False,
+    bind=engine
+)
+Purpose
+
+Creates a Session Factory.
+
+Whenever FastAPI needs to interact with the database, it creates a new Session using:
 
 SessionLocal()
 
-which creates a new session.
+Workflow
 
+Session Factory
+      │
+      ├── Session 1
+      ├── Session 2
+      └── Session 3
 autocommit=False
 
-Suppose
+Changes are not saved automatically.
 
-INSERT Employee
+Example
 
-Immediately saving is risky.
-
-Instead
-
-Insert
+Insert Employee
 
 ↓
 
-Update
+Update Salary
 
 ↓
 
-Delete
+Delete Record
 
 ↓
 
 Commit
 
-If everything succeeds,
+If everything succeeds, the changes are committed.
 
-then save.
-
-So
-
-autocommit=False
-
-means
-
-Don't save automatically.
+This helps maintain data consistency.
 
 autoflush=False
 
-Flush means
+Flush means sending pending changes to the database before committing.
 
-Send changes to the database.
-
-Here
-
-FastAPI decides
-
-when to flush.
+With autoflush=False, SQLAlchemy waits until the application explicitly decides when to send those changes.
 
 bind=engine
-
-This simply means
-
 Session
-
-↓
-
-uses
 
 ↓
 
@@ -319,19 +253,50 @@ Engine
 
 ↓
 
-SQLite
-Last Line
+SQLite Database
+
+It tells every Session which database connection (Engine) to use.
+
+Creating Base
 Base = declarative_base()
+Purpose
 
-This creates the parent class.
+Creates the parent class for all database models.
 
-Later you'll write
-
-class Expense(Base):
-
-or
+Example
 
 class User(Base):
+class Employee(Base):
+class Pipeline(Base):
 
-Now SQLAlchemy automatically creates tables from these classes.
- 
+Every model that inherits from Base becomes a database table.
+
+Complete Execution Flow
+FastAPI Starts
+      │
+      ▼
+database.py Executes
+      │
+      ├── Create Engine
+      ├── Create Session Factory
+      └── Create Base Class
+      │
+      ▼
+Models inherit Base
+      │
+      ▼
+FastAPI creates Sessions
+      │
+      ▼
+Database Operations
+      │
+      ▼
+SQLite Database
+Key Concepts to Remember
+Object	Purpose
+create_engine()	Creates the database connection
+engine	Stores the database connection
+sessionmaker()	Creates database sessions
+SessionLocal()	Creates a new session whenever needed
+declarative_base()	Creates the parent class for all models
+Base	Parent class inherited by every database model
