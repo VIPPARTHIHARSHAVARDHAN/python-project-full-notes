@@ -1,4 +1,4 @@
-CREATED FOLDER in main folder
+CREATED FOLDER in main 
 FastAPi,React
 in Fastapi created 3 files they are database.py,main.py,models.py
 added code in database.py
