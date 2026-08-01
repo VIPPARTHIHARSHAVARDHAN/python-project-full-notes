@@ -417,3 +417,77 @@ The object is added to the session but never saved to the database.
 | commit() | Database |
 | refresh() | Updated Values |
 | return | JSON Response |
+
+
+
+# 🎯 Interview Questions
+
+## Q1. What is a GET API?
+
+### ✅ Answer
+
+A GET API retrieves existing data from the database without modifying it.
+
+---
+
+## Q2. Why do we use response_model=List[TransactionModel]?
+
+### ✅ Answer
+
+Because the API returns multiple Transaction records instead of a single record.
+
+---
+
+## Q3. What does query() do?
+
+### ✅ Answer
+
+It creates a database query for a specific model.
+
+---
+
+## Q4. What does offset() do?
+
+### ✅ Answer
+
+offset() skips a specified number of rows before returning results.
+
+---
+
+## Q5. What does limit() do?
+
+### ✅ Answer
+
+limit() restricts the maximum number of returned rows.
+
+---
+
+## Q6. What does all() do?
+
+### ✅ Answer
+
+all() executes the query and returns all matching records as a Python list.
+
+---
+
+## Q7. Why do we use Pagination?
+
+### ✅ Answer
+
+Pagination improves performance by returning only a small subset of records instead of loading the entire dataset.
+
+---
+
+# 📌 Quick Revision
+
+| Concept | Remember |
+|----------|----------|
+| GET | Read Data |
+| query() | Build Query |
+| offset() | Skip Rows |
+| limit() | Maximum Rows |
+| all() | Execute Query |
+| List | Multiple Objects |
+| return | JSON Response |
+
+---
