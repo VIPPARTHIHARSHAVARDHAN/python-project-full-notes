@@ -188,3 +188,62 @@ The browser blocks requests from the frontend to the backend and displays a CORS
 ---
 
 
+
+# 🎯 Interview Questions
+
+## Q1. What is Pydantic?
+
+### ✅ Answer
+
+Pydantic is a Python library used for data validation, parsing, and serialization in FastAPI.
+
+---
+
+## Q2. What is BaseModel?
+
+### ✅ Answer
+
+BaseModel is the parent class provided by Pydantic. It validates request and response data automatically.
+
+---
+
+## Q3. Why do we inherit from BaseModel?
+
+### ✅ Answer
+
+Inheriting from BaseModel enables validation, type conversion, and automatic JSON serialization.
+
+---
+
+## Q4. Why do we use Type Hinting?
+
+### ✅ Answer
+
+Type Hinting defines the expected datatype of each field and allows Pydantic to validate incoming data.
+
+---
+
+## Q5. What is Inheritance?
+
+### ✅ Answer
+
+Inheritance allows one class to reuse fields and methods from another class, reducing code duplication.
+
+---
+
+## Q6. Why do we create TransactionBase and TransactionModel separately?
+
+### ✅ Answer
+
+TransactionBase is used for incoming request data. TransactionModel extends it by adding the database-generated `id` field for responses.
+
+---
+
+## Q7. What is orm_mode?
+
+### ✅ Answer
+
+`orm_mode` allows Pydantic to convert SQLAlchemy ORM objects into JSON responses. In Pydantic v2, this is replaced by `from_attributes=True`.
+
+---
+
