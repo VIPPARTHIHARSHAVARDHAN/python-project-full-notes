@@ -247,3 +247,77 @@ TransactionBase is used for incoming request data. TransactionModel extends it b
 
 ---
 
+
+
+# 🎯 Interview Questions
+
+## Q1. What is Dependency Injection?
+
+### ✅ Answer
+
+Dependency Injection is a design pattern where FastAPI automatically provides required objects (such as database sessions) to API functions instead of creating them manually.
+
+---
+
+## Q2. Why do we use get_db()?
+
+### ✅ Answer
+
+It creates a database session, provides it to the API, and closes it after the request is completed.
+
+---
+
+## Q3. Why do we use yield instead of return?
+
+### ✅ Answer
+
+yield temporarily provides the database session and resumes execution after the API finishes, allowing FastAPI to close the session properly.
+
+---
+
+## Q4. Why is db.close() important?
+
+### ✅ Answer
+
+It releases database resources and prevents memory leaks or too many open connections.
+
+---
+
+## Q5. What does Depends() do?
+
+### ✅ Answer
+
+Depends() tells FastAPI to execute another function first and inject its returned resource into the API function.
+
+---
+
+## Q6. What is SessionLocal?
+
+### ✅ Answer
+
+SessionLocal is a Session Factory that creates a new database session for every request.
+
+---
+
+## Q7. What does create_all() do?
+
+### ✅ Answer
+
+It creates all database tables defined in SQLAlchemy models if they do not already exist.
+
+---
+
+# 📌 Quick Revision
+
+| Concept | Remember |
+|----------|----------|
+| get_db() | Creates Database Session |
+| yield | Gives Session Temporarily |
+| finally | Always Executes |
+| close() | Releases Resources |
+| Depends | Dependency Injection |
+| Annotated | Type + Dependency |
+| create_all() | Creates Tables |
+
+---
+
