@@ -321,3 +321,99 @@ It creates all database tables defined in SQLAlchemy models if they do not alrea
 
 ---
 
+# 🎯 Interview Questions
+
+## Q1. What is a POST API?
+
+### ✅ Answer
+
+A POST API is used to create new resources in the database.
+
+---
+
+## Q2. What is a Decorator?
+
+### ✅ Answer
+
+A Decorator is a Python feature that adds functionality to a function. In FastAPI, decorators map HTTP requests to functions.
+
+---
+
+## Q3. Why do we use response_model?
+
+### ✅ Answer
+
+It defines the structure of the response returned to the client and ensures consistent API responses.
+
+---
+
+## Q4. Why do we use async?
+
+### ✅ Answer
+
+It allows FastAPI to efficiently handle multiple requests by avoiding unnecessary blocking during I/O operations.
+
+---
+
+## Q5. What is transaction.dict()?
+
+### ✅ Answer
+
+It converts a Pydantic model into a Python dictionary.
+
+---
+
+## Q6. What does ** do?
+
+### ✅ Answer
+
+`**` unpacks a dictionary into keyword arguments.
+
+---
+
+## Q7. What is db.add()?
+
+### ✅ Answer
+
+It adds a SQLAlchemy object to the current database session.
+
+---
+
+## Q8. What is db.commit()?
+
+### ✅ Answer
+
+It permanently saves all pending changes to the database.
+
+---
+
+## Q9. Why do we use db.refresh()?
+
+### ✅ Answer
+
+It reloads the object with the latest values from the database, such as auto-generated IDs.
+
+---
+
+## Q10. What happens if commit() is removed?
+
+### ✅ Answer
+
+The object is added to the session but never saved to the database.
+
+---
+
+# 📌 Quick Revision
+
+| Concept | Remember |
+|----------|----------|
+| @app.post | Registers POST API |
+| POST | Create Data |
+| transaction | Request Body |
+| db | Database Session |
+| dict() | Object → Dictionary |
+| ** | Dictionary Unpacking |
+| add() | Session |
+| commit() | Database |
+| refresh() | Updated Values |
+| return | JSON Response |
