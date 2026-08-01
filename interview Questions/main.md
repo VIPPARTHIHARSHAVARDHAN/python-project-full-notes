@@ -491,3 +491,78 @@ Pagination improves performance by returning only a small subset of records inst
 | return | JSON Response |
 
 ---
+
+
+
+---
+
+# 🎯 Project Interview Questions
+
+## Q1. What is Axios?
+
+### ✅ Answer
+
+Axios is a JavaScript HTTP client used to send requests from the React frontend to the FastAPI backend.
+
+---
+
+## Q2. Why did you use Axios instead of Fetch?
+
+### ✅ Answer
+
+Axios provides a cleaner syntax, automatic JSON conversion, better error handling, request/response interceptors, and easier configuration than the native Fetch API.
+
+---
+
+## Q3. Why did you create api.js?
+
+### ✅ Answer
+
+api.js creates a reusable Axios Instance so the backend URL is defined only once and can be reused across all React components.
+
+---
+
+## Q4. What is an Axios Instance?
+
+### ✅ Answer
+
+An Axios Instance is a customized Axios object created using axios.create(). It allows multiple requests to share common settings like the baseURL and headers.
+
+---
+
+## Q5. What is baseURL?
+
+### ✅ Answer
+
+baseURL is the default backend URL. Axios automatically prefixes every request path with this URL.
+
+---
+
+## Q6. Why use export default api?
+
+### ✅ Answer
+
+It allows other React components to import and reuse the same Axios Instance throughout the application.
+
+---
+
+## Q7. What happens if you don't use api.js?
+
+### ✅ Answer
+
+You would need to write the complete backend URL in every API request, leading to duplicate code and making maintenance more difficult.
+
+---
+
+# 📌 Quick Revision
+
+| Concept | Remember |
+|----------|----------|
+| Axios | HTTP Client |
+| axios.create() | Creates Axios Instance |
+| baseURL | Default Backend URL |
+| api.get() | Sends GET Request |
+| api.post() | Sends POST Request |
+| export default | Share Object Across Files |
+
+---
