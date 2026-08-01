@@ -566,3 +566,85 @@ You would need to write the complete backend URL in every API request, leading t
 | export default | Share Object Across Files |
 
 ---
+
+
+
+
+# Project Interview Questions
+
+## Q1. What is CORS?
+
+### ✅ Answer
+
+CORS (Cross-Origin Resource Sharing) is a browser security mechanism that controls whether one origin can access resources from another origin.
+
+---
+
+## Q2. Why did you add CORSMiddleware?
+
+### ✅ Answer
+
+React and FastAPI were running on different origins. Without CORSMiddleware, the browser blocked API requests due to CORS restrictions.
+
+---
+
+## Q3. What does allow_origins do?
+
+### ✅ Answer
+
+It specifies which frontend URLs are allowed to access the backend.
+
+---
+
+## Q4. Why use allow_methods=["*"]?
+
+### ✅ Answer
+
+It allows all HTTP methods such as GET, POST, PUT, DELETE, PATCH, and OPTIONS.
+
+---
+
+## Q5. What does allow_headers=["*"] mean?
+
+### ✅ Answer
+
+It allows the frontend to send any HTTP headers required by the application.
+
+---
+
+## Q6. Why use allow_credentials=True?
+
+### ✅ Answer
+
+It allows cookies, authentication tokens, and other credentials to be included in requests when needed.
+
+---
+
+## Q7. Why did Axios show "Network Error"?
+
+### ✅ Answer
+
+The browser blocked the request because of CORS restrictions, so Axios reported it as a Network Error.
+
+---
+
+## Q8. Why doesn't Postman require CORS?
+
+### ✅ Answer
+
+Postman sends requests directly to the backend and does not enforce browser security policies like CORS.
+
+---
+
+# Quick Revision
+
+| Concept | Remember |
+|----------|----------|
+| CORS | Browser Security |
+| CORSMiddleware | Allows Cross-Origin Requests |
+| allow_origins | Allowed Frontend URLs |
+| allow_methods | Allowed HTTP Methods |
+| allow_headers | Allowed Request Headers |
+| allow_credentials | Authentication Support |
+
+---
